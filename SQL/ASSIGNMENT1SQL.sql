@@ -5,14 +5,16 @@ DROP TABLE [PROJECTS1732].[dbo].[student];
 
 CREATE TABLE [PROJECTS1732].[dbo].[student] (
 	s_id SMALLINT PRIMARY KEY,
-	s_name CHAR(10),
+	s_fname CHAR(20),
+	s_lname CHAR(30),
 	s_major CHAR(5),
 	s_gradelvl CHAR(2),
 	s_age SMALLINT);
 
 CREATE TABLE [PROJECTS1732].[dbo].[instructor] (
 	i_id SMALLINT PRIMARY KEY,
-	i_name CHAR(10));
+	i_fname CHAR(20),
+	i_lname CHAR(30));
 
 CREATE TABLE [PROJECTS1732].[dbo].[class] (
 	c_name CHAR(8) PRIMARY KEY,
@@ -27,29 +29,29 @@ CREATE TABLE [PROJECTS1732].[dbo].[enroll] (
 
 
 INSERT INTO [PROJECTS1732].[dbo].[student] 
-	(s_id, s_name, s_major, s_gradelvl, s_age) VALUES
-	(100, 'M. JONES',	'ISYS',	'GR', 21),
-	(150, 'J. PARKS', 'ACCT', 'SO', 19),
-	(200, 'R. BAKER', 'MGMT', 'GR', 50),
-	(250, 'P.J. GLASS', 'MKTT', 'SN', 18),
-	(300, 'A. BAKER', 'ISYS', 'SN', 41),
-	(350, 'W. RUSSELL', 'MIS', 'JR', 20),
-	(400, 'O. RYE',	'ACCT',	'FR', 18),
-	(450, 'M. JONES', 'HIST', 'SN', 24);
+	(s_id, s_fname, s_lname, s_major, s_gradelvl, s_age) VALUES
+	(100, 'MIKE', 'JONES',	'ISYS',	'GR', 21),
+	(150, 'DAN', 'PARKS', 'ACCT', 'SO', 19),
+	(200, 'RON', 'BAKER', 'MGMT', 'GR', 50),
+	(250, 'P.J.', 'GLASS', 'MKTT', 'SN', 18),
+	(300, 'ALI', 'BAKER', 'ISYS', 'SN', 41),
+	(350, 'WILLY', 'RUSSELL', 'MIS', 'JR', 20),
+	(400, 'OLIVER', 'RYE',	'ACCT',	'FR', 18),
+	(450, 'MICHELLE', 'JONES', 'HIST', 'SN', 24);
 
 INSERT INTO [PROJECTS1732].[dbo].[instructor] 
-	(i_id, i_name) VALUES
-	(9423, 'R. Wilson'),
-	(9455, 'B. Adams'),
-	(9456, 'E.E. Fred'),
-	(9563, 'M. Law'),
-	(9622, 'A. Jones'),
-	(9678, 'P. Purt'),
-	(9777, 'K. Odum'),
-	(9790, 'T. Smith'),
-	(9792, 'T. Long'),
-	(9795, 'A. Smith'),
-	(9798, 'M. Wood');
+	(i_id, i_fname, i_lname) VALUES
+	(9423, 'RUSSELL', 'WILSON'),
+	(9455, 'BRIAN', 'ADAMS'),
+	(9456, 'ED', 'FRED'),
+	(9563, 'MONICA', 'LAW'),
+	(9622, 'ADAM', 'JONES'),
+	(9678, 'PATRICIA', 'PURT'),
+	(9777, 'LILLY', 'ODUM'),
+	(9790, 'TED', 'SMITH'),
+	(9792, 'TIM', 'LONG'),
+	(9795, 'AMY', 'SMITH'),
+	(9798, 'MARVIN', 'WOOD');
 
 INSERT INTO [PROJECTS1732].[dbo].[class] 
 	(c_name, c_time, c_room, i_id) VALUES
@@ -71,10 +73,28 @@ INSERT INTO [PROJECTS1732].[dbo].[enroll]
 	(2, 'ISYS450V', 400),
 	(3, 'WCOB1023', 450);
 
-
-SELECT e.section_num, c.c_name, s.s_id
-FROM enroll e 
-JOIN class c ON e.c_name = c.c_name
-JOIN student s ON e.s_id = s.s_id;
-
+--Table(Entity) Select
+select * from student;
 select * from class;
+select * from instructor;
+select * from enroll;
+
+--Student's Classes	
+SELECT s.s_lname AS LastName, c.c_name AS ClassName
+FROM student s
+JOIN enroll e ON e.s_id = s.s_id
+JOIN class c ON c.c_name = e.c_name;
+
+--Instructor's Student's
+SELECT i.i_lname AS InstructorLastName, s.s_fname AS StudentFirstName, s.s_lname AS StudentLastName
+FROM student s
+JOIN enroll e ON e.s_id = s.s_id
+JOIN class c ON c.c_name = e.c_name
+JOIN instructor i ON i.i_id = c.i_id;
+
+--Class Roster
+SELECT c.c_name AS ClassName, s.s_fname AS Student_FirstName, s.s_lname AS Student_LastName
+FROM student s
+JOIN enroll e ON e.s_id = s.s_id
+JOIN class c ON c.c_name = e.c_name;
+
